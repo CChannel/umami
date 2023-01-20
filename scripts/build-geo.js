@@ -9,8 +9,8 @@ const tar = require('tar');
 let url =
   'https://raw.githubusercontent.com/GitSquared/node-geolite2-redist/master/redist/GeoLite2-Country.tar.gz';
 
-let citiesUrl =
-  'https://raw.githubusercontent.com/GitSquared/node-geolite2-redist/master/redist/GeoLite2-City.tar.gz';
+// let citiesUrl =
+//   'https://raw.githubusercontent.com/GitSquared/node-geolite2-redist/master/redist/GeoLite2-City.tar.gz';
 
 if (process.env.MAXMIND_LICENSE_KEY) {
   url =
@@ -49,21 +49,21 @@ download(url).then(
       });
     }),
 );
-download(citiesUrl).then(
-  res =>
-    new Promise((resolve, reject) => {
-      res.on('entry', entry => {
-        if (entry.path.endsWith('.mmdb')) {
-          const filename = path.join(dest, path.basename(entry.path));
-          entry.pipe(fs.createWriteStream(filename));
-        }
-      });
+// download(citiesUrl).then(
+//   res =>
+//     new Promise((resolve, reject) => {
+//       res.on('entry', entry => {
+//         if (entry.path.endsWith('.mmdb')) {
+//           const filename = path.join(dest, path.basename(entry.path));
+//           entry.pipe(fs.createWriteStream(filename));
+//         }
+//       });
 
-      res.on('error', e => {
-        reject(e);
-      });
-      res.on('finish', () => {
-        resolve();
-      });
-    }),
-);
+//       res.on('error', e => {
+//         reject(e);
+//       });
+//       res.on('finish', () => {
+//         resolve();
+//       });
+//     }),
+// );
