@@ -14,7 +14,7 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
   const data = {
     website_id,
     session_id,
-    ugc_set_id: event_data?.ugc_set_id,
+    ugc_set_id: event_data?.ugcSetId,
     url: url?.substring(0, URL_LENGTH),
     event_name: event_name?.substring(0, EVENT_NAME_LENGTH),
   };
