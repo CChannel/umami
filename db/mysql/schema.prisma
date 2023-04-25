@@ -22,6 +22,7 @@ model account {
 model event {
   event_id   Int         @id @default(autoincrement()) @db.UnsignedInt
   website_id Int         @db.UnsignedInt
+  ugc_set_id Int?        @db.UnsignedInt
   session_id Int         @db.UnsignedInt
   created_at DateTime?   @default(now()) @db.Timestamp(0)
   url        String      @db.VarChar(500)
@@ -29,10 +30,10 @@ model event {
   session    session     @relation(fields: [session_id], references: [session_id])
   website    website     @relation(fields: [website_id], references: [website_id])
   event_data event_data?
-
   @@index([created_at])
   @@index([session_id])
   @@index([website_id])
+  @@index([ugc_set_id])
 }
 
 model event_data {
