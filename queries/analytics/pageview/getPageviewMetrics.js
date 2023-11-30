@@ -29,7 +29,8 @@ async function relationalQuery(website_id, start_at, end_at, column, table, filt
       ${joinSession && sessionQuery}
       ${eventQuery}
     group by 1
-    order by 2 desc`,
+    order by 2 desc
+    limit 1000`,
     params,
     {
       readOnly: true,
