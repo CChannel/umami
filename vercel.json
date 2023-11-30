@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/website/**/.js": {
+      "maxDuration": 300
+    }
+  }
+}
