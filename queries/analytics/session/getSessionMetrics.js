@@ -34,6 +34,9 @@ async function relationalQuery(website_id, start_at, end_at, field, filters = {}
     group by 1
     order by 2 desc`,
     params,
+    {
+      readOnly: true,
+    },
   );
 }
 

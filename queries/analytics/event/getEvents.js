@@ -10,7 +10,7 @@ export function getEvents(...args) {
 }
 
 function relationalQuery(websites, start_at) {
-  return prisma.client.event.findMany({
+  return prisma.roClient.event.findMany({
     where: {
       website: {
         website_id: {
@@ -30,7 +30,7 @@ function clickhouseQuery(websites, start_at) {
   return rawQuery(
     `select
       event_id,
-      website_id, 
+      website_id,
       session_id,
       created_at,
       url,

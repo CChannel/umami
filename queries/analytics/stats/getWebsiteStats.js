@@ -38,6 +38,9 @@ async function relationalQuery(website_id, start_at, end_at, filters = {}) {
         group by 1, 2
      ) t`,
     params,
+    {
+      readOnly: true,
+    }
   );
 }
 
@@ -53,7 +56,7 @@ async function clickhouseQuery(website_id, start_at, end_at, filters = {}) {
   );
 
   return rawQuery(
-    `select 
+    `select
        sum(t.c) as "pageviews",
        count(distinct t.session_uuid) as "uniques",
        sum(if(t.c = 1, 1, 0)) as "bounces",

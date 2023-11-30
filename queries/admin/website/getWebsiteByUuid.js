@@ -2,7 +2,7 @@ import prisma from 'lib/prisma';
 import redis from 'lib/redis';
 
 export async function getWebsiteByUuid(website_uuid) {
-  return prisma.client.website
+  return prisma.roClient.website
     .findUnique({
       where: {
         website_uuid,

@@ -11,7 +11,7 @@ export async function getSessionByUuid(...args) {
 }
 
 async function relationalQuery(session_uuid) {
-  return prisma.client.session
+  return prisma.roClient.session
     .findUnique({
       where: {
         session_uuid,
@@ -31,17 +31,17 @@ async function clickhouseQuery(session_uuid) {
   const params = [session_uuid];
 
   return rawQuery(
-    `select 
-      session_uuid, 
-      website_id, 
-      created_at, 
-      hostname, 
-      browser, 
-      os, 
-      device, 
+    `select
+      session_uuid,
+      website_id,
+      created_at,
+      hostname,
+      browser,
+      os,
+      device,
       screen,
-      language, 
-      country 
+      language,
+      country
     from session
     where session_uuid = $1`,
     params,

@@ -39,6 +39,9 @@ async function relationalQuery(
         ${sessionQuery}
       group by 1`,
     params,
+    {
+      readOnly: true,
+    },
   );
 }
 
@@ -64,10 +67,10 @@ async function clickhouseQuery(
 
   return rawQuery(
     `select
-      ${getDateStringQuery('g.t', unit)} as t, 
+      ${getDateStringQuery('g.t', unit)} as t,
       g.y as y
     from
-      (select 
+      (select
         ${getDateQuery('created_at', unit, timezone)} t,
         count(${count !== '*' ? `${count}${sessionKey}` : count}) y
       from pageview
