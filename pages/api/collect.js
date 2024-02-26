@@ -76,7 +76,7 @@ export default async (req, res) => {
   // Example: https://hyacca.online/bridal/set/ -> https://mp.cac-app.com/v/cart3/gift/main/
   // Now umami collects this page as: url: bridal/set/ & url: v/cart3/gift/main/
   if (hostname !== website_domain) {
-    url = `${hostname}/${url}`;
+    url = `//${hostname}/${url}`;
   }
 
   const event_uuid = uuid();
