@@ -75,7 +75,8 @@ export default async (req, res) => {
   // This will help to track session when users is redireced to different webpage
   // Example: https://hyacca.online/bridal/set/ -> https://mp.cac-app.com/v/cart3/gift/main/
   // Now umami collects this page as: url: bridal/set/ & url: v/cart3/gift/main/
-  if (hostname !== website_domain) {
+  // Check if the hostname is the same as the website domain and hostname without www. or m. is the same as the website domain
+  if (hostname !== website_domain && hostname.replace(/^(www|m)\./, '') !== website_domain) {
     url = `//${hostname}/${url}`;
   }
 
