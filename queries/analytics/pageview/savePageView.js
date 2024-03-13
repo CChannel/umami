@@ -2,6 +2,7 @@ import { URL_LENGTH } from 'lib/constants';
 import { CLICKHOUSE, PRISMA, runQuery } from 'lib/db';
 import kafka from 'lib/kafka';
 import prisma from 'lib/prisma';
+import putRecordToKinesisFirehose, { PAGEVIEW_STREAM } from 'lib/firehose';
 
 export async function savePageView(...args) {
   return runQuery({
@@ -11,7 +12,7 @@ export async function savePageView(...args) {
 }
 
 async function relationalQuery(website_id, { session_id, url, referrer }) {
-  return prisma.client.pageview.create({
+  const pageViewData = await prisma.client.pageview.create({
     data: {
       website_id,
       session_id,
@@ -19,6 +20,10 @@ async function relationalQuery(website_id, { session_id, url, referrer }) {
       referrer: referrer?.substring(0, URL_LENGTH),
     },
   });
+
+  putRecordToKinesisFirehose({ pageViewData }, PAGEVIEW_STREAM);
+
+  return pageViewData;
 }
 
 async function clickhouseQuery(website_id, { session_uuid, url, referrer }) {
