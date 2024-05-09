@@ -28,13 +28,16 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
     };
   }
 
-  const eventData = await prisma.client.event.create({
+  const event = await prisma.client.event.create({
     data,
+    include: {
+      event_data: true,
+    },
   });
 
-  await putRecordToKinesisFirehose({ eventData }, EVENT_STREAM);
+  await putRecordToKinesisFirehose({ event }, EVENT_STREAM);
 
-  return eventData;
+  return event;
 }
 
 async function clickhouseQuery(
