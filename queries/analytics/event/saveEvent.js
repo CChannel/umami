@@ -21,6 +21,7 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
   };
 
   const event = Object.assign({}, data);
+  event.created_at = new Date();
 
   if (event_data) {
     data.event_data = {
@@ -28,7 +29,7 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
         event_data: event_data,
       },
     };
-    event.event_data = { event_data };
+    event.event_data = event_data;
   }
 
   const eventData = await prisma.client.event.create({
