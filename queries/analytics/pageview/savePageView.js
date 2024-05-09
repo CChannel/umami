@@ -12,16 +12,20 @@ export async function savePageView(...args) {
 }
 
 async function relationalQuery(website_id, { session_id, url, referrer }) {
+  const data = {
+    website_id,
+    session_id,
+    url: url?.substring(0, URL_LENGTH),
+    referrer: referrer?.substring(0, URL_LENGTH),
+  };
+
   const pageViewData = await prisma.client.pageview.create({
-    data: {
-      website_id,
-      session_id,
-      url: url?.substring(0, URL_LENGTH),
-      referrer: referrer?.substring(0, URL_LENGTH),
-    },
+    data,
   });
 
-  await putRecordToKinesisFirehose({ pageViewData }, PAGEVIEW_STREAM);
+  const pageview = Object.assign({}, data);
+  pageview.created_at = new Date();
+  await putRecordToKinesisFirehose({ pageview }, PAGEVIEW_STREAM);
 
   return pageViewData;
 }
