@@ -20,7 +20,7 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
     event_name: event_name?.substring(0, EVENT_NAME_LENGTH),
   };
 
-  const event = data;
+  const event = Object.assign({}, data);
 
   if (event_data) {
     data.event_data = {
