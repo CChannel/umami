@@ -20,24 +20,24 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
     event_name: event_name?.substring(0, EVENT_NAME_LENGTH),
   };
 
+  const event = data;
+
   if (event_data) {
     data.event_data = {
       create: {
         event_data: event_data,
       },
     };
+    event.event_data = { event_data };
   }
 
-  const event = await prisma.client.event.create({
+  const eventData = await prisma.client.event.create({
     data,
-    include: {
-      event_data: true,
-    },
   });
 
   await putRecordToKinesisFirehose({ event }, EVENT_STREAM);
 
-  return event;
+  return eventData;
 }
 
 async function clickhouseQuery(
