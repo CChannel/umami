@@ -2,7 +2,7 @@ import { EVENT_NAME_LENGTH, URL_LENGTH } from 'lib/constants';
 import { CLICKHOUSE, PRISMA, runQuery } from 'lib/db';
 import kafka from 'lib/kafka';
 import prisma from 'lib/prisma';
-import putRecordToKinesisFirehose, { EVENT_STREAM } from 'lib/firehose';
+import { putRecordToKinesisFirehose, EVENT_STREAM } from 'lib/firehose';
 
 export async function saveEvent(...args) {
   return runQuery({
@@ -32,7 +32,7 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
     data,
   });
 
-  putRecordToKinesisFirehose({ eventData }, EVENT_STREAM);
+  await putRecordToKinesisFirehose({ eventData }, EVENT_STREAM);
 
   return eventData;
 }
