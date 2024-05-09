@@ -2,7 +2,7 @@ import { URL_LENGTH } from 'lib/constants';
 import { CLICKHOUSE, PRISMA, runQuery } from 'lib/db';
 import kafka from 'lib/kafka';
 import prisma from 'lib/prisma';
-import putRecordToKinesisFirehose, { PAGEVIEW_STREAM } from 'lib/firehose';
+import { putRecordToKinesisFirehose, PAGEVIEW_STREAM } from 'lib/firehose';
 
 export async function savePageView(...args) {
   return runQuery({
@@ -21,7 +21,7 @@ async function relationalQuery(website_id, { session_id, url, referrer }) {
     },
   });
 
-  putRecordToKinesisFirehose({ pageViewData }, PAGEVIEW_STREAM);
+  await putRecordToKinesisFirehose({ pageViewData }, PAGEVIEW_STREAM);
 
   return pageViewData;
 }
