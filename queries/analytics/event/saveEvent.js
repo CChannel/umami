@@ -6,10 +6,7 @@ import { putRecordToKinesisFirehose, EVENT_STREAM } from 'lib/firehose';
 
 export async function saveEvent(...args) {
   return runQuery({
-    [PRISMA]: () => {
-      relationalQuery(...args);
-      kinesisfirehoseQuery(...args);
-    },
+    [PRISMA]: () => relationalQuery(...args),
     [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
@@ -30,9 +27,11 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
     };
   }
 
-  return prisma.client.event.create({
+  const prismaResult = prisma.client.event.create({
     data,
   });
+  await kinesisfirehoseQuery(website_id, { session_id, url, event_name, event_data });
+  return prismaResult;
 }
 
 async function clickhouseQuery(

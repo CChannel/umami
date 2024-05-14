@@ -6,16 +6,13 @@ import { putRecordToKinesisFirehose, PAGEVIEW_STREAM } from 'lib/firehose';
 
 export async function savePageView(...args) {
   return runQuery({
-    [PRISMA]: () => {
-      relationalQuery(...args);
-      kinesisfirehoseQuery(...args);
-    },
+    [PRISMA]: () => relationalQuery(...args),
     [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
 
 async function relationalQuery(website_id, { session_id, url, referrer }) {
-  return prisma.client.pageview.create({
+  const prismaResult = prisma.client.pageview.create({
     data: {
       website_id,
       session_id,
@@ -23,6 +20,8 @@ async function relationalQuery(website_id, { session_id, url, referrer }) {
       referrer: referrer?.substring(0, URL_LENGTH),
     },
   });
+  await kinesisfirehoseQuery(website_id, { session_id, url, referrer });
+  return prismaResult;
 }
 
 async function clickhouseQuery(website_id, { session_uuid, url, referrer }) {
