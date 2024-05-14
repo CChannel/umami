@@ -1,14 +1,16 @@
 import { URL_LENGTH } from 'lib/constants';
-import { CLICKHOUSE, PRISMA, KINESIS_FIREHOSE, runQuery } from 'lib/db';
+import { CLICKHOUSE, PRISMA, runQuery } from 'lib/db';
 import kafka from 'lib/kafka';
 import prisma from 'lib/prisma';
 import { putRecordToKinesisFirehose, PAGEVIEW_STREAM } from 'lib/firehose';
 
 export async function savePageView(...args) {
   return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
+    [PRISMA]: () => {
+      relationalQuery(...args);
+      kinesisfirehoseQuery(...args);
+    },
     [CLICKHOUSE]: () => clickhouseQuery(...args),
-    [KINESIS_FIREHOSE]: () => kinesisfirehoseQuery(...args),
   });
 }
 
