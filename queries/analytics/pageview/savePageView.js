@@ -12,15 +12,24 @@ export async function savePageView(...args) {
 }
 
 async function relationalQuery(website_id, { session_id, url, referrer }) {
-  const prismaResult = prisma.client.pageview.create({
-    data: {
-      website_id,
-      session_id,
-      url: url?.substring(0, URL_LENGTH),
-      referrer: referrer?.substring(0, URL_LENGTH),
-    },
-  });
-  await kinesisfirehoseQuery(website_id, { session_id, url, referrer });
+  let prismaResult = null;
+  try {
+    prismaResult = prisma.client.pageview.create({
+      data: {
+        website_id,
+        session_id,
+        url: url?.substring(0, URL_LENGTH),
+        referrer: referrer?.substring(0, URL_LENGTH),
+      },
+    });
+  } catch (e) {
+    //Ignore
+  }
+  try {
+    await kinesisfirehoseQuery(website_id, { session_id, url, referrer });
+  } catch (e) {
+    //Ignore
+  }
   return prismaResult;
 }
 
