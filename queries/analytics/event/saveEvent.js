@@ -26,11 +26,19 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
       },
     };
   }
-
-  const prismaResult = prisma.client.event.create({
-    data,
-  });
-  await kinesisfirehoseQuery(website_id, { session_id, url, event_name, event_data });
+  let prismaResult = null;
+  try {
+    prismaResult = prisma.client.event.create({
+      data,
+    });
+  } catch (e) {
+    //Ignore
+  }
+  try {
+    await kinesisfirehoseQuery(website_id, { session_id, url, event_name, event_data });
+  } catch (e) {
+    //Ignore
+  }
   return prismaResult;
 }
 
