@@ -28,7 +28,7 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
   }
   let prismaResult = null;
   try {
-    prismaResult = prisma.client.event.create({
+    prismaResult = await prisma.client.event.create({
       data,
     });
   } catch (e) {

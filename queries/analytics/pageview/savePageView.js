@@ -14,7 +14,7 @@ export async function savePageView(...args) {
 async function relationalQuery(website_id, { session_id, url, referrer }) {
   let prismaResult = null;
   try {
-    prismaResult = prisma.client.pageview.create({
+    prismaResult = await prisma.client.pageview.create({
       data: {
         website_id,
         session_id,
