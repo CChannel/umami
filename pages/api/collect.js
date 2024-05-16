@@ -60,15 +60,24 @@ export default async (req, res) => {
   await useSession(req, res);
 
   const {
-    session: { website_id, session_id, session_uuid },
+    session: { website_id, session_id, session_uuid, website_domain },
   } = req;
 
   const { type, payload } = getJsonBody(req);
 
-  let { url, referrer, event_name, event_data } = payload;
+  let { url, referrer, event_name, event_data, hostname } = payload;
 
   if (process.env.REMOVE_TRAILING_SLASH) {
     url = url.replace(/\/$/, '');
+  }
+
+  // Add hostname if it is not from the domain registered in umami
+  // This will help to track session when users is redireced to different webpage
+  // Example: https://hyacca.online/bridal/set/ -> https://mp.cac-app.com/v/cart3/gift/main/
+  // Now umami collects this page as: url: bridal/set/ & url: v/cart3/gift/main/
+  // Check if the hostname is the same as the website domain and hostname without www. or m. is the same as the website domain
+  if (hostname !== website_domain && hostname.replace(/^(www|m)\./, '') !== website_domain) {
+    url = `//${hostname}/${url}`;
   }
 
   const event_uuid = uuid();

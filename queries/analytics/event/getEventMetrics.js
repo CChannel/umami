@@ -32,6 +32,9 @@ async function relationalQuery(
     group by 1, 2
     order by 2`,
     params,
+    {
+      readOnly: true,
+    },
   );
 }
 

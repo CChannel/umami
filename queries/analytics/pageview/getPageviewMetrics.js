@@ -19,9 +19,20 @@ async function relationalQuery(website_id, start_at, end_at, column, table, filt
     params,
   );
 
+  let useIndex = "";
+  if (table === "pageview") {
+    useIndex = "use index (pageview_website_id_created_at_idx)";
+  }
+  if (table === "event") {
+    useIndex = "";
+  }
+  if (table === "session") {
+    useIndex = "";
+  }
+
   return rawQuery(
     `select ${column} x, count(*) y
-    from ${table}
+    from ${table} ${useIndex}
       ${joinSession}
     where ${table}.website_id=$1
       and ${table}.created_at between $2 and $3
@@ -29,8 +40,12 @@ async function relationalQuery(website_id, start_at, end_at, column, table, filt
       ${joinSession && sessionQuery}
       ${eventQuery}
     group by 1
-    order by 2 desc`,
+    order by 2 desc
+    limit 100`,
     params,
+    {
+      readOnly: true,
+    }
   );
 }
 

@@ -10,16 +10,16 @@ export async function getSessions(...args) {
 }
 
 async function relationalQuery(websites, start_at) {
-  return prisma.client.session.findMany({
+  return prisma.roClient.session.findMany({
     where: {
       ...(websites && websites.length > 0
         ? {
-            website: {
-              website_id: {
-                in: websites,
-              },
+          website: {
+            website_id: {
+              in: websites,
             },
-          }
+          },
+        }
         : {}),
       created_at: {
         gte: start_at,

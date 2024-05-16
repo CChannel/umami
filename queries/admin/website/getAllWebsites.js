@@ -1,7 +1,7 @@
 import prisma from 'lib/prisma';
 
 export async function getAllWebsites() {
-  let data = await prisma.client.website.findMany({
+  let data = await prisma.roClient.website.findMany({
     orderBy: [
       {
         user_id: 'asc',

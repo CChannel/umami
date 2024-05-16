@@ -1,7 +1,7 @@
 import prisma from 'lib/prisma';
 
 export async function getAccounts() {
-  return prisma.client.account.findMany({
+  return prisma.roClient.account.findMany({
     orderBy: [
       { is_admin: 'desc' },
       {
