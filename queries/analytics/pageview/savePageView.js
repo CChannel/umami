@@ -3,6 +3,7 @@ import { CLICKHOUSE, PRISMA, runQuery } from 'lib/db';
 import kafka from 'lib/kafka';
 import prisma from 'lib/prisma';
 import { putRecordToKinesisFirehose, PAGEVIEW_STREAM } from 'lib/firehose';
+import { insertBigQueryData, BIGQUERY_PAGEVIEW_TABLE_ID } from 'lib/bigquery';
 
 export async function savePageView(...args) {
   return runQuery({
@@ -27,6 +28,11 @@ async function relationalQuery(website_id, { session_id, url, referrer }) {
   }
   try {
     await kinesisfirehoseQuery(website_id, { session_id, url, referrer });
+  } catch (e) {
+    //Ignore
+  }
+  try {
+    await bigQuery(website_id, { session_id, url, referrer });
   } catch (e) {
     //Ignore
   }
@@ -56,4 +62,16 @@ async function kinesisfirehoseQuery(website_id, { session_id, url, referrer }) {
 
   data.created_at = new Date();
   await putRecordToKinesisFirehose({ data }, PAGEVIEW_STREAM);
+}
+
+async function bigQuery(website_id, { session_id, url, referrer }) {
+  const data = {
+    website_id,
+    session_id,
+    url: url?.substring(0, URL_LENGTH),
+    referrer: referrer?.substring(0, URL_LENGTH),
+  };
+
+  data.created_at = new Date();
+  await insertBigQueryData({ data }, BIGQUERY_PAGEVIEW_TABLE_ID);
 }
