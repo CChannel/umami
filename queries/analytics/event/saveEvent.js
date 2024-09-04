@@ -83,14 +83,18 @@ async function kinesisfirehoseQuery(website_id, { session_id, url, event_name, e
   await putRecordToKinesisFirehose({ data }, EVENT_STREAM);
 }
 
-async function bigQuery(website_id, { session_id, url, referrer }) {
+async function bigQuery(website_id, { session_id, url, event_name, event_data }) {
   const data = {
     website_id,
     session_id,
+    ugc_set_id: event_data?.ugcSetId ? Number(event_data.ugcSetId) : null,
     url: url?.substring(0, URL_LENGTH),
-    referrer: referrer?.substring(0, URL_LENGTH),
+    event_name: event_name?.substring(0, EVENT_NAME_LENGTH),
   };
 
+  if (event_data) {
+    data.event_data = event_data;
+  }
   data.created_at = new Date();
   await insertBigQueryData({ data }, BIGQUERY_EVENT_TABLE_ID);
 }
