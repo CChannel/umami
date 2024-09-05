@@ -95,6 +95,6 @@ async function bigQuery(website_id, { session_id, url, event_name, event_data })
   if (event_data) {
     data.event_data = event_data;
   }
-  data.created_at = new Date();
+  data.created_at = new Date().toISOString().replace('Z', '');
   await insertBigQueryData({ data }, BIGQUERY_EVENT_TABLE_ID);
 }
