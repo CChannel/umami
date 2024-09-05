@@ -72,6 +72,6 @@ async function bigQuery(website_id, { session_id, url, referrer }) {
     referrer: referrer?.substring(0, URL_LENGTH),
   };
 
-  data.created_at = new Date();
+  data.created_at = new Date().toISOString().replace('Z', '');
   await insertBigQueryData({ data }, BIGQUERY_PAGEVIEW_TABLE_ID);
 }
