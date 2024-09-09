@@ -80,7 +80,7 @@ async function kinesisfirehoseQuery(website_id, { session_id, url, event_name, e
   }
   data.created_at = new Date();
 
-  await putRecordToKinesisFirehose({ data }, EVENT_STREAM);
+  await putRecordToKinesisFirehose(data, EVENT_STREAM);
 }
 
 async function bigQuery(website_id, { session_id, url, event_name, event_data }) {
@@ -96,5 +96,5 @@ async function bigQuery(website_id, { session_id, url, event_name, event_data })
     data.event_data = JSON.stringify(event_data);
   }
   data.created_at = new Date().toISOString().replace('Z', '');
-  await insertBigQueryData({ data }, BIGQUERY_EVENT_TABLE_ID);
+  await insertBigQueryData(data, BIGQUERY_EVENT_TABLE_ID);
 }
