@@ -61,7 +61,7 @@ async function kinesisfirehoseQuery(website_id, { session_id, url, referrer }) {
   };
 
   data.created_at = new Date();
-  await putRecordToKinesisFirehose({ data }, PAGEVIEW_STREAM);
+  await putRecordToKinesisFirehose(data, PAGEVIEW_STREAM);
 }
 
 async function bigQuery(website_id, { session_id, url, referrer }) {
@@ -73,5 +73,5 @@ async function bigQuery(website_id, { session_id, url, referrer }) {
   };
 
   data.created_at = new Date().toISOString().replace('Z', '');
-  await insertBigQueryData({ data }, BIGQUERY_PAGEVIEW_TABLE_ID);
+  await insertBigQueryData(data, BIGQUERY_PAGEVIEW_TABLE_ID);
 }
