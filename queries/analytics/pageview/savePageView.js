@@ -32,7 +32,12 @@ async function relationalQuery(website_id, { session_id, url, referrer }) {
     //Ignore
   }
   try {
-    await bigQuery(website_id, { view_id: prismaResult.view_id, session_id, url, referrer });
+    await bigQuery(website_id, {
+      view_id: prismaResult?.view_id ?? null,
+      session_id,
+      url,
+      referrer,
+    });
   } catch (e) {
     //Ignore
   }

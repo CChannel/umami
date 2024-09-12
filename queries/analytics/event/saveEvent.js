@@ -42,7 +42,7 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
   }
   try {
     await bigQuery(website_id, {
-      event_id: prismaResult.event_id,
+      event_id: prismaResult?.event_id ?? null,
       session_id,
       url,
       event_name,
