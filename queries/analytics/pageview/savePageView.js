@@ -33,7 +33,6 @@ async function relationalQuery(website_id, { session_id, url, referrer }) {
   }
   try {
     await bigQuery(website_id, {
-      view_id: prismaResult?.view_id ?? null,
       session_id,
       url,
       referrer,
@@ -69,9 +68,8 @@ async function kinesisfirehoseQuery(website_id, { session_id, url, referrer }) {
   await putRecordToKinesisFirehose(data, PAGEVIEW_STREAM);
 }
 
-async function bigQuery(website_id, { view_id, session_id, url, referrer }) {
+async function bigQuery(website_id, { session_id, url, referrer }) {
   const data = {
-    view_id,
     website_id,
     session_id,
     url: url?.substring(0, URL_LENGTH),

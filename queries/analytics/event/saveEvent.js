@@ -42,7 +42,6 @@ async function relationalQuery(website_id, { session_id, url, event_name, event_
   }
   try {
     await bigQuery(website_id, {
-      event_id: prismaResult?.event_id ?? null,
       session_id,
       url,
       event_name,
@@ -89,9 +88,8 @@ async function kinesisfirehoseQuery(website_id, { session_id, url, event_name, e
   await putRecordToKinesisFirehose(data, EVENT_STREAM);
 }
 
-async function bigQuery(website_id, { event_id, session_id, url, event_name, event_data }) {
+async function bigQuery(website_id, { session_id, url, event_name, event_data }) {
   const data = {
-    event_id,
     website_id,
     session_id,
     ugc_set_id: event_data?.ugcSetId ? Number(event_data.ugcSetId) : null,
