@@ -4,105 +4,120 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Umami is a simple, fast, privacy-focused alternative to Google Analytics built with Next.js and React. The application supports multiple databases (MySQL, PostgreSQL, ClickHouse) and provides web analytics tracking with real-time dashboards.
+Umami is a privacy-focused web analytics alternative to Google Analytics. This is a Next.js application that provides both a dashboard interface and tracking capabilities with support for multiple databases (PostgreSQL, MySQL, ClickHouse).
 
-## Commands
+## Development Commands
 
-### Development
-- `npm run dev` - Start development server
-- `npm run build` - Full production build (includes database, tracker, geo data, and app)
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint with quiet output
+### Core Development
+- **Start development server**: `npm run dev` (runs on http://localhost:3000)
+- **Build application**: `npm run build` (full production build including database setup, tracker, and app)
+- **Start production server**: `npm start`
+- **Lint code**: `npm run lint`
 
 ### Database Operations
-- `npm run build-db` - Copy database files and generate Prisma client
-- `npm run check-db` - Verify database connection and structure
-- `npm run prisma:generate` - Generate Prisma client
-- `npm run prisma:dev` - Run database migrations in development
-- `npm run prisma:deploy` - Deploy database migrations to production
+- **Generate Prisma client**: `npm run prisma:generate`
+- **Run database migrations (dev)**: `npm run prisma:dev`
+- **Deploy database migrations**: `npm run prisma:deploy`
+- **Check database connection**: `npm run check-db`
+- **Build database files**: `npm run build-db`
 
 ### Build Components
-- `npm run build-tracker` - Build JavaScript tracking script using Rollup
-- `npm run build-geo` - Build geolocation data
-- `npm run build-app` - Build Next.js application only
-- `npm run update-tracker` - Update tracking script
+- **Build tracker script**: `npm run build-tracker` (creates the analytics tracking script)
+- **Build geo data**: `npm run build-geo`
+- **Build app only**: `npm run build-app`
 
-### Language & Internationalization
-- `npm run build-lang` - Complete language build process
-- `npm run extract-lang` - Extract translatable strings from components
-- `npm run merge-lang` - Merge language files
-- `npm run format-lang` - Format language files
-- `npm run compile-lang` - Compile language files for production
+### Internationalization
+- **Extract messages**: `npm run extract-lang`
+- **Merge language files**: `npm run merge-lang`
+- **Format language files**: `npm run format-lang`
+- **Compile language files**: `npm run compile-lang`
+- **Build all language files**: `npm run build-lang`
 
-## Architecture
+### Docker
+- **Build for Docker**: `npm run build-docker`
+- **Start with Docker compose**: `docker compose up`
 
-### Core Technologies
-- **Frontend**: Next.js 12 with React 17, CSS modules, React Intl for i18n
-- **Backend**: Next.js API routes with middleware
-- **Database**: Prisma ORM supporting MySQL, PostgreSQL, and ClickHouse
-- **State Management**: Zustand for client state
-- **Analytics**: Custom tracking script built with Rollup
+## Architecture Overview
 
-### Directory Structure
+### Frontend Structure
+- **Pages**: Next.js pages in `/pages` directory with API routes in `/pages/api`
+- **Components**: Organized in `/components` with subdirectories:
+  - `common/`: Reusable UI components (Button, Modal, Table, etc.)
+  - `metrics/`: Analytics-specific components (charts, tables, filters)
+  - `layout/`: Layout components (Header, Footer, Page structure)
+  - `forms/`: Form components for settings and configuration
+  - `settings/`: Settings-related components
 
-#### `/components/`
-- `common/` - Reusable UI components (Button, Modal, Table, etc.)
-- `forms/` - Form components for authentication and website management
-- `layout/` - Layout components (Header, Footer, Page structure)
-- `metrics/` - Analytics visualization components (charts, tables, dashboards)
-- `pages/` - Page-level components (Dashboard, Settings, etc.)
-- `settings/` - Settings and configuration components
+### Backend Architecture
+- **Database Layer**: 
+  - Prisma ORM with multiple database support (PostgreSQL, MySQL, ClickHouse)
+  - Read/write database splitting support via `DATABASE_RO_URL`
+  - Query abstraction in `/queries` directory organized by domain
+- **API Layer**: RESTful APIs in `/pages/api` handling authentication, data collection, and analytics
+- **Data Collection**: `/pages/api/collect.js` handles all tracking data ingestion
+- **Session Management**: Custom session handling in `/lib/session.js`
 
-#### `/pages/`
-- Next.js pages with file-based routing
-- `/api/` - Backend API endpoints organized by feature
-- Authentication, analytics collection, and admin functions
+### Key Libraries and Architecture Decisions
+- **Next.js 12+**: React framework with API routes
+- **Prisma**: Database ORM with schema in `/prisma`
+- **React 17**: Frontend framework
+- **Zustand**: State management (see `/store` directory)
+- **React-Intl**: Internationalization support
+- **Chart.js**: Data visualization
+- **CSS Modules**: Component-scoped styling
 
-#### `/lib/`
-Core utility modules:
-- `auth.js` - Authentication logic
-- `db.js` - Database connection and utilities
-- `prisma.js` - Prisma client configuration
-- `session.js` - Session management
-- `crypto.js` - Encryption and hashing utilities
-- `date.js` - Date/time formatting and timezone handling
+### Tracking System
+- **Tracker Script**: Built from `/tracker/index.js` using Rollup
+- **Data Collection**: Supports pageviews and custom events
+- **Cross-domain Tracking**: Configurable via environment variables
+- **Privacy Features**: DoNotTrack support, IP ignoring, bot detection
 
-#### `/queries/`
-Database query functions organized by domain:
-- `admin/` - User and website management queries
-- `analytics/` - Pageview, event, and session analytics queries
+## Environment Configuration
 
-#### `/db/`
-Database schemas and migrations for each supported database type (MySQL, PostgreSQL, ClickHouse)
+Key environment variables (see `.env.local.example`):
+- `DATABASE_URL`: Primary database connection (required)
+- `DATABASE_RO_URL`: Read-only database connection (optional)
+- `HASH_SALT`: Random string for generating unique values
+- `TRACKER_SCRIPT_NAME`: Custom tracker script name (default: umami)
+- `COLLECT_API_ENDPOINT`: Custom collection endpoint
+- `FORCE_SSL`: Redirect HTTP to HTTPS
+- `IGNORE_IP`: Comma-delimited IPs to exclude
+- `DATABASE_TYPE`: Required for Docker builds (mysql/postgresql)
 
-#### `/tracker/`
-Client-side tracking scripts that websites embed to send analytics data
+## Database Support
 
-### Key Features
-- **Multi-database support** with environment-based schema selection
-- **Real-time analytics** with WebSocket updates
-- **Internationalization** supporting 40+ languages
-- **Privacy-focused** design with no personal data collection
-- **Custom event tracking** with structured event data
-- **Geographic data** for visitor location analytics
-- **Share functionality** for public analytics dashboards
+The application supports multiple databases through abstraction layers:
+- **PostgreSQL**: Primary supported database
+- **MySQL**: Full support with MySQL-specific query adaptations
+- **ClickHouse**: For high-volume analytics with Kafka integration
+- **Prisma Schema**: Located in `/db/{database}/schema.prisma`
 
-### Environment Configuration
-- `DATABASE_URL` - Primary database connection string
-- `BASE_PATH` - Optional base path for deployment
-- `FORCE_SSL` - Enable HTTPS security headers
-- Database-specific environment variables for BigQuery, ClickHouse, Redis
+## Code Quality and Linting
 
-### Database Models
-Core entities: `account`, `website`, `session`, `pageview`, `event`, `event_data`
-- Websites belong to accounts (users)
-- Sessions track visitor browser/device info with geographic data
-- Pageviews and events link to sessions and websites
-- Event data supports custom JSON properties
+- **ESLint**: Configured with Next.js and Prettier integration
+- **Prettier**: Code formatting with specific rules (single quotes, 100 char width)
+- **Stylelint**: CSS linting for CSS modules
+- **Husky**: Git hooks for pre-commit linting (lint-staged)
 
-### Security Features
-- Content Security Policy headers
-- CSRF protection via middleware
-- Encrypted passwords using bcrypt
-- Session-based authentication
-- Optional SSL enforcement
+## Testing
+
+This project uses a **TestConsole** component for manual testing but does not have a comprehensive automated test suite. Testing is primarily done through:
+- Manual testing via `/console` route with test tracking implementation
+- Database testing through `npm run check-db`
+
+## Important File Paths
+
+- **Database schemas**: `/db/{database-type}/schema.prisma`
+- **Tracker source**: `/tracker/index.js`
+- **Main collection API**: `/pages/api/collect.js`
+- **Query abstractions**: `/queries/` (organized by domain: admin, analytics)
+- **Internationalization**: `/lang/` and `/public/intl/`
+- **Build scripts**: `/scripts/`
+
+## Development Notes
+
+- Node.js 22+ required (see `engines` in package.json)
+- Uses CSS Modules for component styling
+- Supports both npm and yarn (yarn.lock present)
+- Environment-specific builds supported for different databases
+- Custom build pipeline that includes database setup, tracker compilation, and app building
