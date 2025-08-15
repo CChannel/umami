@@ -9,32 +9,32 @@ Umami is a privacy-focused web analytics alternative to Google Analytics. This i
 ## Development Commands
 
 ### Core Development
-- **Start development server**: `npm run dev` (runs on http://localhost:3000)
-- **Build application**: `npm run build` (full production build including database setup, tracker, and app)
-- **Start production server**: `npm start`
-- **Lint code**: `npm run lint`
+- **Start development server**: `yarn dev` (runs on http://localhost:3000)
+- **Build application**: `yarn build` (full production build including database setup, tracker, and app)
+- **Start production server**: `yarn start`
+- **Lint code**: `yarn lint`
 
 ### Database Operations
-- **Generate Prisma client**: `npm run prisma:generate`
-- **Run database migrations (dev)**: `npm run prisma:dev`
-- **Deploy database migrations**: `npm run prisma:deploy`
-- **Check database connection**: `npm run check-db`
-- **Build database files**: `npm run build-db`
+- **Generate Prisma client**: `yarn prisma:generate`
+- **Run database migrations (dev)**: `yarn prisma:dev`
+- **Deploy database migrations**: `yarn prisma:deploy`
+- **Check database connection**: `yarn check-db`
+- **Build database files**: `yarn build-db`
 
 ### Build Components
-- **Build tracker script**: `npm run build-tracker` (creates the analytics tracking script)
-- **Build geo data**: `npm run build-geo`
-- **Build app only**: `npm run build-app`
+- **Build tracker script**: `yarn build-tracker` (creates the analytics tracking script)
+- **Build geo data**: `yarn build-geo`
+- **Build app only**: `yarn build-app`
 
 ### Internationalization
-- **Extract messages**: `npm run extract-lang`
-- **Merge language files**: `npm run merge-lang`
-- **Format language files**: `npm run format-lang`
-- **Compile language files**: `npm run compile-lang`
-- **Build all language files**: `npm run build-lang`
+- **Extract messages**: `yarn extract-lang`
+- **Merge language files**: `yarn merge-lang`
+- **Format language files**: `yarn format-lang`
+- **Compile language files**: `yarn compile-lang`
+- **Build all language files**: `yarn build-lang`
 
 ### Docker
-- **Build for Docker**: `npm run build-docker`
+- **Build for Docker**: `yarn build-docker`
 - **Start with Docker compose**: `docker compose up`
 
 ## Architecture Overview
@@ -103,7 +103,7 @@ The application supports multiple databases through abstraction layers:
 
 This project uses a **TestConsole** component for manual testing but does not have a comprehensive automated test suite. Testing is primarily done through:
 - Manual testing via `/console` route with test tracking implementation
-- Database testing through `npm run check-db`
+- Database testing through `yarn check-db`
 
 ## Important File Paths
 
