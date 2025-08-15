@@ -109,7 +109,7 @@
     "zustand": "^3.7.2"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "devDependencies": {
     "@formatjs/cli": "^4.2.29",
