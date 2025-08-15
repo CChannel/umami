@@ -108,6 +108,9 @@
     "uuid": "^8.3.2",
     "zustand": "^3.7.2"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "devDependencies": {
     "@formatjs/cli": "^4.2.29",
     "@rollup/plugin-buble": "^0.21.3",
